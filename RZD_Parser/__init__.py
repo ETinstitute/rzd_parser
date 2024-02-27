@@ -1,3 +1,3 @@
-from RZD_Parser.parser import Parser
+from RZD_Parser.parser import RZDParser
 
-__all__ = ['Parser']
+__all__ = ['RZDParser']

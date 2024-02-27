@@ -13,18 +13,35 @@ git clone https://github.com/ETinstitute/rzd_parser
 pip install -r requirements.txt
 ```
 ## Пример работы
-Для начала работы нужно создать экземпляр парсера. В качестве параметра `date_publication_0`, нужно передать дату левой границы. 
-Правая граница по умолчанию сегодняшний день. Можно передавать как строку, в формате DD.MM.YYYY, так и обьекты datetime  
+Для начала работы нужно создать экземпляр парсера. 
+
+В качестве параметра `date_publication_0`, нужно передать дату левой границы. 
+Правая граница по умолчанию сегодняшний день. Можно передавать как строку, в формате DD.MM.YYYY, так и обьекты datetime 
 ```Python
-from RZD_Parser import Parser
+from RZD_Parser import RZDParser
 
-p = Parser(date_publication_0 = '12.01.2021')
 
-df = p.parse_data()
+parser = RZDParser()
+
+start_date = '01.06.2022'
+end_date = '01.12.2023'
+
+df = parser.parse_data(date_publication_0=start_date, date_publication_1=end_date)
 ```
-Возвращает обьект pandas.DataFrame с данными о поставках РЖД
-Если вам нужны не только чистые данные по поставкам, а еще по их приросту, годовому итогу и прочему, то можно добавить флаг `dropna=False` и вы получите все данные с сайта РЖД
+# Обновление данных
+
+Одним из преимуществ данного парсера является способность автоматически обновлять данные
+
+## Первый способ
+
+если у вас уже есть инстанс спарсенного df, то можно просто вызвать функцию update_data
+```python
+updated_df = parser.update_data()
+```
+## Второй способ
+
+Если у вас есть csv файл с этими данными, то можно указать путь до этого файла
 
 ```python
-df = p.parse_data(dropna=False)
+updated_df = parser.update_data(csv_filepath='data.csv')
 ```
