@@ -57,6 +57,3 @@ class RZDParser:
         new_data = pd.DataFrame(data=new_data, index=index)
 
         return pd.concat([new_data, self.df])
-
-
-

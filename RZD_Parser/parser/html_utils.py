@@ -47,10 +47,11 @@ class HTMLUtils:
                 month_datetime = self._get_month_datetime(month_url=month_url)
 
                 if len(month_data.keys()) < 10:
+                    # print(f'\tbreak pattern: {month_url}')
                     # попалась страница с лишней информацией, хз как иначе их фильтровать
                     continue
 
-                # print(f'({month_url}) {month_datetime}: {month_data}')
+                # print(f'{month_datetime} {month_url}:\t{month_data}')
 
                 data.append(month_data)
                 index.append(month_datetime)
