@@ -1,3 +1,4 @@
+import pandas as pd
 import requests
 from typing import Iterable, Optional
 from bs4 import BeautifulSoup
@@ -51,11 +52,12 @@ class HTMLUtils:
                     # попалась страница с лишней информацией, хз как иначе их фильтровать
                     continue
 
-                # print(f'{month_datetime} {month_url}:\t{month_data}')
+                print(f'{month_datetime} {month_url}:\t{month_data}')
 
                 data.append(month_data)
                 index.append(month_datetime)
 
+        print('Data successfully pulled!')
         return data, index
 
     def _get_month_url_list(self, url_factory: URLFactory) -> list[URL]:
@@ -69,9 +71,7 @@ class HTMLUtils:
         response = requests.get(month_url, headers=self.__headers)
         soup = BeautifulSoup(response.text, self.engine)
 
-        text = soup.text
-
-        result = self.data_parser.parse_values(text)
+        result = self.data_parser.parse_values(soup.text)
 
         return result
 
@@ -81,7 +81,9 @@ class HTMLUtils:
 
         date = soup.find('span', class_="text-red").text
 
-        return date
+        result = self.data_parser.parse_date(date)
+
+        return result
 
     def __get_page_count(self) -> Iterable[int]:
         soup = BeautifulSoup(self.response.text, self.engine).find_all('a', class_='pager__link')
@@ -90,3 +92,10 @@ class HTMLUtils:
 
         return range(1, n + 1)
 
+    @staticmethod
+    def increase_date(date, n):
+        start_date = pd.to_datetime(date, dayfirst=True) + pd.offsets.Day(n)
+        year, month, day = str(start_date).split()[0].split('-')
+        date_publication = f'{day}.{month}.{year}'
+
+        return date_publication

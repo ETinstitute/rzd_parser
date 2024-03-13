@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 from typing import Union, Optional
 from datetime import datetime
@@ -5,6 +7,9 @@ from datetime import datetime
 from RZD_Parser.exceptions.io_exceptions import RZDFileNotFound, RZDDataFrameNotCreatedError
 from RZD_Parser.parser.html_utils import HTMLUtils
 from RZD_Parser.url import URLFactory
+
+logger = logging.getLogger('my_logger')
+logger.setLevel(logging.INFO)
 
 
 class RZDParser:
@@ -19,6 +24,8 @@ class RZDParser:
             parse_data: parsing data and returns dataframe
             update_data: checking difference with your data and data in RZD site
         """
+
+
 
         self.url_factory = None
         self.html_utils = HTMLUtils()
@@ -51,9 +58,17 @@ class RZDParser:
             if self.df is None:
                 raise RZDDataFrameNotCreatedError()
 
-        self.url_factory = URLFactory(date_publication_0=self.df.index[0], date_publication_1=datetime.now())
+        # start_date = pd.to_datetime(self.df.index[0], dayfirst=True) + pd.offsets.Day(3)
+        # year, month, day = str(start_date).split()[0].split('-')
+        # date_publication_0 = f'{day}.{month}.{year}'
+
+        # прибавляем к последнему дню пару дней, чтобы его дважды не считал
+        date_publication_0 = self.html_utils.increase_date(date=self.df.index[0], n=3)
+
+        self.url_factory = URLFactory(date_publication_0=date_publication_0, date_publication_1=datetime.now())
 
         new_data, index = self.html_utils.get_data(url_factory=self.url_factory)
+
         new_data = pd.DataFrame(data=new_data, index=index)
 
         return pd.concat([new_data, self.df])

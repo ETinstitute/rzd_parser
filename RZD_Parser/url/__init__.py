@@ -32,7 +32,7 @@ class URLFactory:
 
     base_url: str = 'https://company.rzd.ru'
     url: str = field(init=False)
-    date_re = r'^\d{2}\.\d{2}\.\d{4}$'
+    date_re = r'^\d{2}\.\d{2}.\d{4}$'
 
     def update_url(self):
         self.url = self.base_url + '/ru/9397/page/13307?' + \
