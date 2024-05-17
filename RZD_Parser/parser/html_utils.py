@@ -8,7 +8,6 @@ from typing import List, Dict, TypeVar
 from RZD_Parser.url import URLFactory
 from RZD_Parser.parser.data_parser import DataParser
 
-
 Data = TypeVar('Data', bound=List[Dict[str, float]])
 Index = TypeVar('Index', bound=List[datetime])
 URL = TypeVar('URL', bound=str)
